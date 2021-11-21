@@ -7,11 +7,13 @@ on:
     branches:
       - main
     paths-ignore:
-      - 'CHANGELOG.md'
+      - 'CODEOWNERS'
+      - '.md'
+      - '.**'
 
 jobs:
   build:
-    name: Release
+    name: Create Release
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
