@@ -21,6 +21,7 @@ jobs:
       - name: Get next version
         id: next_version
         run: |
+          awk
           COMMIT=$(git rev-list --tags --max-count=1)
           VERSION=$(git describe --tags ${COMMIT})
           NEXTVERSION=$(echo ${VERSION} | awk -F. -v OFS=. '{$NF++;print}')
