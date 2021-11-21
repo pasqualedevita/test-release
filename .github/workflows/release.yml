@@ -23,13 +23,12 @@ jobs:
           ref: 'main'
           fetch-depth: 0
           token: ${{ secrets.GITHUB_TOKEN }}
+
       - name: Get next version
         id: next_version
         run: |
           VERSION=$(git tag  | grep -E '^v[0-9]' | sort -V | tail -1)
-          # echo $VERSION
           NEXTVERSION=$(echo $VERSION | awk -F. -v OFS=. '{$NF++;print}')
-          # echo $NEXTVERSION
           echo "::set-output name=NEXTVERSION::$NEXTVERSION"
 
       - name: Changelog
@@ -39,24 +38,33 @@ jobs:
         run: |
           git config --global user.name ${GITHUB_ACTOR}
           git config --global user.email ${GITHUB_ACTOR}
+
           # Tag the current branch
           echo "Create first tag"
           git tag -a $NEXTVERSION -m "Release: $NEXTVERSION"
+
           # Create changlog
           npx auto-changelog --commit-limit false --unreleased
+
           # Add the change log file:
           git add CHANGELOG.md
+
           # Commit changelog
           git commit -m "Release: $NEXTVERSION" --no-verify
-          # push the changelog file.
+
+          # Push the changelog file.
           git push origin main
+
           # Delete tag
           git tag -d $NEXTVERSION
+
           # Recreate tag
           git tag -a $NEXTVERSION -m "Release: $NEXTVERSION"
-          # push the tag
+
+          # Push the tag
           git push origin $NEXTVERSION
-          # push to branch the CHANGELOG.md
+
+          # Push to branch the CHANGELOG.md
           git push origin main
 
       - name: Create Release
