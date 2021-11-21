@@ -21,10 +21,12 @@ jobs:
       - name: Get next version
         id: next_version
         run: |
-          COMMIT=$(git rev-list --tags --max-count=1)
-          echo $COMMIT
-          VERSION=$(git describe --tags $COMMIT)
-          echo $VERSION
+          #COMMIT=$(git rev-list --tags --max-count=1)
+          #echo $COMMIT
+          #VERSION=$(git describe --tags $COMMIT)
+          #echo $VERSION
+          VERSION=$(git tag  | grep -E '^v[0-9]' | sort -V | tail -1)
+          echoo $VERSION
           #NEXTVERSION=$(echo ${VERSION} | awk -F. -v OFS=. '{$NF++;print}')
           #echo $NEXTVERSION
           #echo "::set-output name=NEXTVERSION::$NEXTVERSION"
