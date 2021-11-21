@@ -23,18 +23,18 @@ jobs:
         run: |
           COMMIT=$(git rev-list --tags --max-count=1)
           echo $COMMIT
-          #VERSION=$(git describe --tags ${COMMIT})
-          #echo $VERSION
+          VERSION=$(git describe --tags ${COMMIT})
+          echo $VERSION
           #NEXTVERSION=$(echo ${VERSION} | awk -F. -v OFS=. '{$NF++;print}')
           #echo $NEXTVERSION
           #echo "::set-output name=NEXTVERSION::$NEXTVERSION"
-      - name: Release snapshot
-        id: release-snapshot
-        uses: actions/create-release@latest
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          tag_name: ${{ steps.next_version.outputs.NEXTVERSION }}
-          release_name: ${{ steps.next_version.outputs.NEXTVERSION }}
-          draft: false
-          prerelease: false
+      # - name: Release snapshot
+      #   id: release-snapshot
+      #   uses: actions/create-release@latest
+      #   env:
+      #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      #   with:
+      #     tag_name: ${{ steps.next_version.outputs.NEXTVERSION }}
+      #     release_name: ${{ steps.next_version.outputs.NEXTVERSION }}
+      #     draft: false
+      #     prerelease: false
