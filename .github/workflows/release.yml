@@ -28,7 +28,7 @@ jobs:
           #echo $VERSION
           VERSION=$(git tag  | grep -E '^v[0-9]' | sort -V | tail -1)
           echo $VERSION
-          NEXTVERSION=$(echo ${VERSION} | awk -F. -v OFS=. '{$NF++;print}')
+          NEXTVERSION=$(echo $VERSION | awk -F. -v OFS=. '{$NF++;print}')
           echo $NEXTVERSION
           echo "::set-output name=NEXTVERSION::$NEXTVERSION"
       - name: Create Release
