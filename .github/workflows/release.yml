@@ -23,11 +23,11 @@ jobs:
         run: |
           COMMIT=$(git rev-list --tags --max-count=1)
           echo $COMMIT
-          VERSION=$(git describe --tags ${COMMIT})
-          echo $VERSION
-          NEXTVERSION=$(echo ${VERSION} | awk -F. -v OFS=. '{$NF++;print}')
-          echo $NEXTVERSION
-          echo "::set-output name=NEXTVERSION::${NEXTVERSION}"
+          #VERSION=$(git describe --tags ${COMMIT})
+          #echo $VERSION
+          #NEXTVERSION=$(echo ${VERSION} | awk -F. -v OFS=. '{$NF++;print}')
+          #echo $NEXTVERSION
+          #echo "::set-output name=NEXTVERSION::$NEXTVERSION"
       - name: Release snapshot
         id: release-snapshot
         uses: actions/create-release@latest
