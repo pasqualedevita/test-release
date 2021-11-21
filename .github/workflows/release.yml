@@ -1,8 +1,11 @@
-name: Nightly Snapshot
+name: Release
 
 on:
-  schedule:
-  - cron: "59 23 * * *"
+  # Trigger the workflow on push or pull request,
+  # but only for the main branch
+  push:
+    branches:
+      - main
 
 jobs:
   build:
