@@ -40,7 +40,5 @@ jobs:
         with:
           tag_name: ${{ steps.next_version.outputs.NEXTVERSION }}
           release_name: ${{ steps.next_version.outputs.NEXTVERSION }}
-          version: ${{ steps.next_version.outputs.VERSION }}
-          next_version: ${{ steps.next_version.outputs.NEXTVERSION }}
           draft: false
           prerelease: false
