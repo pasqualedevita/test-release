@@ -29,6 +29,7 @@ jobs:
           NEXTVERSION=$(echo $VERSION | awk -F. -v OFS=. '{$NF++;print}')
           # echo $NEXTVERSION
           echo "::set-output name=NEXTVERSION::$NEXTVERSION"
+
       - name: Changelog
         id: changelog
         env:
@@ -36,13 +37,26 @@ jobs:
         run: |
           git config --global user.name ${GITHUB_ACTOR}
           git config --global user.email ${GITHUB_ACTOR}
+          # Tag the current branch
+          echo "Create first tag"
+          git tag -a $NEXTVERSION -m "Release: $NEXTVERSION"
           # Create changlog
           npx auto-changelog --commit-limit false --unreleased
           # Add the change log file:
           git add CHANGELOG.md
           # Commit changelog
           git commit -m "Release: $NEXTVERSION" --no-verify
+          # push the changelog file.
           git push origin main
+          # Delete tag
+          git tag -d $NEXTVERSION
+          # Recreate tag
+          git tag -a $NEXTVERSION -m "Release: $NEXTVERSION"
+          # push the tag
+          git push origin $NEXTVERSION
+          # push to branch the CHANGELOG.md
+          git push origin main
+
       - name: Create Release
         id: create_release
         uses: actions/create-release@latest
