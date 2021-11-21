@@ -14,9 +14,13 @@ jobs:
     name: Release
     runs-on: ubuntu-latest
     steps:
-      - name: Get current date
-        id: date
-        run: echo "::set-output name=date::$(date +'%Y-%m-%d')"
+      - name: Get next version
+        id: next_version
+        run: |
+          COMMIT=$(git rev-list --tags --max-count=1)
+          VERRION=$(git describe --tags ${COMMIT})
+          NEXTVERSION=$(echo ${VERSION} | awk -F. -v OFS=. '{$NF++;print}')
+          echo "::set-output name=NEXTVERSION::${NEXTVERSION}"
       - name: Checkout branch "main"
         uses: actions/checkout@v2
         with:
@@ -27,7 +31,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          tag_name: ${{ steps.date.outputs.date }}
-          release_name: ${{ steps.date.outputs.date }}
+          tag_name: ${{ steps.next_version.outputs.NEXTVERSION }}
+          release_name: ${{ steps.next_version.outputs.NEXTVERSION }}
           draft: false
           prerelease: false
