@@ -20,6 +20,7 @@ jobs:
         with:
           ref: 'main'
           fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
       - name: Get next version
         id: next_version
         run: |
