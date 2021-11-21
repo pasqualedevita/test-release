@@ -23,7 +23,7 @@ jobs:
         run: |
           COMMIT=$(git rev-list --tags --max-count=1)
           echo $COMMIT
-          VERSION=$(git describe --tags ${COMMIT})
+          VERSION=$(git describe --tags $COMMIT)
           echo $VERSION
           #NEXTVERSION=$(echo ${VERSION} | awk -F. -v OFS=. '{$NF++;print}')
           #echo $NEXTVERSION
