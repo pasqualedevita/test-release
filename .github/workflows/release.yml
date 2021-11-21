@@ -28,6 +28,18 @@ jobs:
           NEXTVERSION=$(echo $VERSION | awk -F. -v OFS=. '{$NF++;print}')
           # echo $NEXTVERSION
           echo "::set-output name=NEXTVERSION::$NEXTVERSION"
+      - name: Changelog
+        id: changelog
+        env:
+          NEXTVERSION: ${{ steps.next_version.outputs.NEXTVERSION }}
+        run: |
+          # Create changlog
+          npx auto-changelog --commit-limit false --unreleased
+          # Add the change log file:
+          git add CHANGELOG.md
+          # Commit changelog
+          git commit -m "Release: $NEXTVERSION" --no-verify
+          git push origin main
       - name: Create Release
         id: create_release
         uses: actions/create-release@latest
