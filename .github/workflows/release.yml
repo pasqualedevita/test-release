@@ -79,4 +79,4 @@ jobs:
           release_name: ${{ steps.next_version.outputs.NEXTVERSION }}
           draft: false
           prerelease: false
-          bodyFile: 'CHANGELOG.md'
+          body_path: 'CHANGELOG.md'
