@@ -8,7 +8,7 @@ on:
       - main
     paths-ignore:
       - 'CODEOWNERS'
-      - '.md'
+      - '**.md'
       - '.**'
 
 jobs:
