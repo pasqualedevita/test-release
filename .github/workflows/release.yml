@@ -22,7 +22,7 @@ jobs:
         with:
           ref: 'main'
           fetch-depth: 0
-          token: ${{ secrets.GITHUB_TOKEN }}
+          # token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Get next version
         id: next_version
@@ -36,36 +36,38 @@ jobs:
         env:
           NEXTVERSION: ${{ steps.next_version.outputs.NEXTVERSION }}
         run: |
-          git config --global user.name ${GITHUB_ACTOR}
-          git config --global user.email ${GITHUB_ACTOR}
+          npx auto-changelog --unreleased-only --latest-version $NEXTVERSION
 
-          # Tag the current branch
-          echo "Create first tag"
-          git tag -a $NEXTVERSION -m "Release: $NEXTVERSION"
+          # git config --global user.name ${GITHUB_ACTOR}
+          # git config --global user.email ${GITHUB_ACTOR}
 
-          # Create changlog
-          npx auto-changelog --commit-limit false --unreleased
+          # # Tag the current branch
+          # echo "Create first tag"
+          # git tag -a $NEXTVERSION -m "Release: $NEXTVERSION"
 
-          # Add the change log file:
-          git add CHANGELOG.md
+          # # Create changlog
+          # npx auto-changelog --commit-limit false --unreleased
 
-          # Commit changelog
-          git commit -m "Release: $NEXTVERSION" --no-verify
+          # # Add the change log file:
+          # git add CHANGELOG.md
 
-          # Push the changelog file.
-          git push origin main
+          # # Commit changelog
+          # git commit -m "Release: $NEXTVERSION" --no-verify
 
-          # Delete tag
-          git tag -d $NEXTVERSION
+          # # Push the changelog file.
+          # git push origin main
 
-          # Recreate tag
-          git tag -a $NEXTVERSION -m "Release: $NEXTVERSION"
+          # # Delete tag
+          # git tag -d $NEXTVERSION
 
-          # Push the tag
-          git push origin $NEXTVERSION
+          # # Recreate tag
+          # git tag -a $NEXTVERSION -m "Release: $NEXTVERSION"
 
-          # Push to branch the CHANGELOG.md
-          git push origin main
+          # # Push the tag
+          # git push origin $NEXTVERSION
+
+          # # Push to branch the CHANGELOG.md
+          # git push origin main
 
       - name: Create Release
         id: create_release
@@ -77,3 +79,4 @@ jobs:
           release_name: ${{ steps.next_version.outputs.NEXTVERSION }}
           draft: false
           prerelease: false
+          bodyFile: 'CHANGELOG.md'
