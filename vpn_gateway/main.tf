@@ -2,6 +2,7 @@
 # Gateway
 #
 
+
 resource "random_string" "dns" {
   length  = 6
   special = false
