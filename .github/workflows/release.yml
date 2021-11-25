@@ -39,9 +39,10 @@ jobs:
             minor="${BASH_REMATCH[2]}"
             patch="${BASH_REMATCH[3]}"
           fi
-
+          echo "${{ github.event.pull_request.labels.*.name }}"
+          
           # check paramater to see which number to increment
-          if [[ "${{ github.event.label.name == 'release: major' }}" == "major" ]]; then
+          if [[ "${{ github.event.pull_request.labels.*.name == 'release: major' }}" == "major" ]]; then
             major=$(echo $major+1 | bc)
           elif [[ "${{ github.event.label.name == 'release: minor' }}" == "minor" ]]; then
             minor=$(echo $minor + 1 | bc)
