@@ -40,13 +40,15 @@ jobs:
             patch="${BASH_REMATCH[3]}"
           fi
           
-          echo "${{ toJson(github.event.pull_request.labels) }}"
           # check paramater to see which number to increment
-          if [[ "${{ contains(github.event.pull_request.labels.*.name, 'release_major') }}" == "true" ]]; then
+          if [[ "${GITHUB_REF##*/}" == *"major"* ]]; then
+          # if [[ "${{ contains(github.event.pull_request.labels.*.name, 'release_major') }}" == "true" ]]; then
             major=$(echo $major+1 | bc)
-          elif [[ "${{ contains(github.event.pull_request.labels.*.name, 'release_minor') }}" == "true" ]]; then
+          elif [[ "${GITHUB_REF##*/}" == *"minor"* ]]; then
+          # elif [[ "${{ contains(github.event.pull_request.labels.*.name, 'release_minor') }}" == "true" ]]; then
             minor=$(echo $minor + 1 | bc)
-          elif [[ "${{ contains(github.event.pull_request.labels.*.name, 'release_patch') }}" == "true" ]]; then
+          elif [[ "${GITHUB_REF##*/}" == *"patch"* ]]; then
+          # elif [[ "${{ contains(github.event.pull_request.labels.*.name, 'release_patch') }}" == "true" ]]; then
             patch=$(echo $patch + 1 | bc)
           else
             patch=$(echo $patch + 1 | bc)
