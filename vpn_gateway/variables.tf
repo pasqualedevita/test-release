@@ -10,6 +10,8 @@ variable "resource_group_name" {
 
 
 
+
+
 variable "location" {
   description = "The Azure Region in which to create resource."
 }
