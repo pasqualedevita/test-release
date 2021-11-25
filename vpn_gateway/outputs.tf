@@ -7,3 +7,5 @@ output "fqdn" {
   description = "The fqdn for gateway."
   value       = azurerm_public_ip.gw.fqdn
 }
+
+
