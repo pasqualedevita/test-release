@@ -23,37 +23,91 @@ jobs:
           ref: 'main'
           fetch-depth: 0
 
-      - name: Get next version
-        id: next_version
+      - name: Is major
+        id: is_major
+        if: contains(github.event.pull_request.labels.*.name, 'release_major')
         run: |
           VERSION=$(git tag  | grep -E '^v[0-9]' | sort -V | tail -1)
-
           major=0
           minor=0
           patch=0
-
-          # break down the version number into it's components
           regex="v([0-9]+).([0-9]+).([0-9]+)"
           if [[ $VERSION =~ $regex ]]; then
             major="${BASH_REMATCH[1]}"
             minor="${BASH_REMATCH[2]}"
             patch="${BASH_REMATCH[3]}"
           fi
-          echo "${{ github.event.pull_request.labels.*.name }}"
-          
-          # check paramater to see which number to increment
-          if [[ "${{ github.event.pull_request.labels.*.name == 'release: major' }}" == "major" ]]; then
-            major=$(echo $major+1 | bc)
-          elif [[ "${{ github.event.label.name == 'release: minor' }}" == "minor" ]]; then
-            minor=$(echo $minor + 1 | bc)
-          elif [[ "${{ github.event.label.name == 'release: patch' }}" == "patch" ]]; then
-            patch=$(echo $patch + 1 | bc)
-          else
-            patch=$(echo $patch + 1 | bc)
+          major=$(echo $major+1 | bc)
+          NEXTVERSION="v${major}.${minor}.${patch}"
+          echo "::set-output name=NEXTVERSION::$NEXTVERSION"
+
+      - name: Is minor
+        id: is_minor
+        if: contains(github.event.pull_request.labels.*.name, 'release_minor')
+        run: |
+          VERSION=$(git tag  | grep -E '^v[0-9]' | sort -V | tail -1)
+          major=0
+          minor=0
+          patch=0
+          regex="v([0-9]+).([0-9]+).([0-9]+)"
+          if [[ $VERSION =~ $regex ]]; then
+            major="${BASH_REMATCH[1]}"
+            minor="${BASH_REMATCH[2]}"
+            patch="${BASH_REMATCH[3]}"
+          fi
+          minor=$(echo $minor+1 | bc)
+          NEXTVERSION="v${major}.${minor}.${patch}"
+          echo "::set-output name=NEXTVERSION::$NEXTVERSION"
+
+      - name: Is patch
+        id: is_patch
+        if: contains(github.event.pull_request.labels.*.name, 'release_patch')
+        run: |
+          VERSION=$(git tag  | grep -E '^v[0-9]' | sort -V | tail -1)
+          major=0
+          minor=0
+          patch=0
+          regex="v([0-9]+).([0-9]+).([0-9]+)"
+          if [[ $VERSION =~ $regex ]]; then
+            major="${BASH_REMATCH[1]}"
+            minor="${BASH_REMATCH[2]}"
+            patch="${BASH_REMATCH[3]}"
+          fi
+          patch=$(echo $patch+1 | bc)
+          NEXTVERSION="v${major}.${minor}.${patch}"
+          echo "::set-output name=NEXTVERSION::$NEXTVERSION"
+
+      - name: Get next version
+        id: next_version
+        env:
+          NEXTVERSION_MAJOR: ${{ steps.is_major.outputs.NEXTVERSION }}
+          NEXTVERSION_MINOR: ${{ steps.is_minor.outputs.NEXTVERSION }}
+          NEXTVERSION_PATCH: ${{ steps.is_patch.outputs.NEXTVERSION }}
+        run: |
+          if [ -z "$NEXTVERSION_MAJOR" ]
+          then
+            NEXTVERSION=$NEXTVERSION_MAJOR
+            echo "::set-output name=NEXTVERSION::$NEXTVERSION"
+            exit 0
           fi
 
-          NEXTVERSION="v${major}.${minor}.${patch}"
-          # NEXTVERSION=$(echo $VERSION | awk -F. -v OFS=. '{$NF++;print}')
+          if [ -z "$NEXTVERSION_MINOR" ]
+          then
+            NEXTVERSION=$NEXTVERSION_MINOR
+            echo "::set-output name=NEXTVERSION::$NEXTVERSION"
+            exit 0
+          fi
+
+          if [ -z "$NEXTVERSION_PATCH" ]
+          then
+            NEXTVERSION=$NEXTVERSION_PATCH
+            echo "::set-output name=NEXTVERSION::$NEXTVERSION"
+            exit 0
+          fi
+          
+          # no label, patch
+          VERSION=$(git tag  | grep -E '^v[0-9]' | sort -V | tail -1)
+          NEXTVERSION=$(echo $VERSION | awk -F. -v OFS=. '{$NF++;print}')
           echo "::set-output name=NEXTVERSION::$NEXTVERSION"
 
       - name: Changelog
