@@ -41,13 +41,13 @@ jobs:
           fi
           
           # check paramater to see which number to increment
-          if [[ "${GITHUB_REF##*/}" == *"major"* ]]; then
+          if [[ "${{ github.ref }}" == *"major"* ]]; then
           # if [[ "${{ contains(github.event.pull_request.labels.*.name, 'release_major') }}" == "true" ]]; then
             major=$(echo $major+1 | bc)
-          elif [[ "${GITHUB_REF##*/}" == *"minor"* ]]; then
+          elif [[ "${{ github.ref }}" == *"minor"* ]]; then
           # elif [[ "${{ contains(github.event.pull_request.labels.*.name, 'release_minor') }}" == "true" ]]; then
             minor=$(echo $minor + 1 | bc)
-          elif [[ "${GITHUB_REF##*/}" == *"patch"* ]]; then
+          elif [[ "${{ github.ref }}" == *"patch"* ]]; then
           # elif [[ "${{ contains(github.event.pull_request.labels.*.name, 'release_patch') }}" == "true" ]]; then
             patch=$(echo $patch + 1 | bc)
           else
