@@ -40,7 +40,7 @@ jobs:
             patch="${BASH_REMATCH[3]}"
           fi
           
-          echo "${{ toJson(github.event.pull_request.labels.*.name) }}"
+          echo "${{ toJson(github.event.pull_request.labels) }}"
           # check paramater to see which number to increment
           if [[ "${{ contains(github.event.pull_request.labels.*.name, 'release_major') }}" == "true" ]]; then
             major=$(echo $major+1 | bc)
