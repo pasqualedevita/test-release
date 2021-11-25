@@ -25,7 +25,7 @@ jobs:
 
       - name: Is major
         id: is_major
-        if: ${{ contains(github.event.pull_request.labels.*.namesß, 'release_major') }}
+        if: ${{ contains(github.event.pull_request.labels.*.names, 'release_major') }}
         run: |
           VERSION=$(git tag  | grep -E '^v[0-9]' | sort -V | tail -1)
           major=0
