@@ -22,13 +22,37 @@ jobs:
         with:
           ref: 'main'
           fetch-depth: 0
-          # token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Get next version
         id: next_version
         run: |
           VERSION=$(git tag  | grep -E '^v[0-9]' | sort -V | tail -1)
-          NEXTVERSION=$(echo $VERSION | awk -F. -v OFS=. '{$NF++;print}')
+
+          major=0
+          minor=0
+          patch=0
+
+          # break down the version number into it's components
+          regex="v([0-9]+).([0-9]+).([0-9]+)"
+          if [[ $VERSION =~ $regex ]]; then
+            major="${BASH_REMATCH[1]}"
+            minor="${BASH_REMATCH[2]}"
+            patch="${BASH_REMATCH[3]}"
+          fi
+
+          # check paramater to see which number to increment
+          if [[ "${{ github.event.label.name == 'release: major' }}" == "major" ]]; then
+            major=$(echo $major+1 | bc)
+          elif [[ "${{ github.event.label.name == 'release: minor' }}" == "minor" ]]; then
+            minor=$(echo $minor + 1 | bc)
+          elif [[ "${{ github.event.label.name == 'release: patch' }}" == "patch" ]]; then
+            patch=$(echo $patch + 1 | bc)
+          else
+            patch=$(echo $patch + 1 | bc)
+          fi
+
+          NEXTVERSION="v${major}.${minor}.${patch}"
+          # NEXTVERSION=$(echo $VERSION | awk -F. -v OFS=. '{$NF++;print}')
           echo "::set-output name=NEXTVERSION::$NEXTVERSION"
 
       - name: Changelog
@@ -37,37 +61,6 @@ jobs:
           NEXTVERSION: ${{ steps.next_version.outputs.NEXTVERSION }}
         run: |
           npx auto-changelog --unreleased-only --latest-version $NEXTVERSION
-
-          # git config --global user.name ${GITHUB_ACTOR}
-          # git config --global user.email ${GITHUB_ACTOR}
-
-          # # Tag the current branch
-          # echo "Create first tag"
-          # git tag -a $NEXTVERSION -m "Release: $NEXTVERSION"
-
-          # # Create changlog
-          # npx auto-changelog --commit-limit false --unreleased
-
-          # # Add the change log file:
-          # git add CHANGELOG.md
-
-          # # Commit changelog
-          # git commit -m "Release: $NEXTVERSION" --no-verify
-
-          # # Push the changelog file.
-          # git push origin main
-
-          # # Delete tag
-          # git tag -d $NEXTVERSION
-
-          # # Recreate tag
-          # git tag -a $NEXTVERSION -m "Release: $NEXTVERSION"
-
-          # # Push the tag
-          # git push origin $NEXTVERSION
-
-          # # Push to branch the CHANGELOG.md
-          # git push origin main
 
       - name: Create Release
         id: create_release
