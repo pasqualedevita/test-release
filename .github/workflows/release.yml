@@ -84,21 +84,21 @@ jobs:
           NEXTVERSION_MINOR: ${{ steps.is_minor.outputs.NEXTVERSION }}
           NEXTVERSION_PATCH: ${{ steps.is_patch.outputs.NEXTVERSION }}
         run: |
-          if [ -z "$NEXTVERSION_MAJOR" ]
+          if [ -n "$NEXTVERSION_MAJOR" ]
           then
             NEXTVERSION=$NEXTVERSION_MAJOR
             echo "::set-output name=NEXTVERSION::$NEXTVERSION"
             exit 0
           fi
 
-          if [ -z "$NEXTVERSION_MINOR" ]
+          if [ -n "$NEXTVERSION_MINOR" ]
           then
             NEXTVERSION=$NEXTVERSION_MINOR
             echo "::set-output name=NEXTVERSION::$NEXTVERSION"
             exit 0
           fi
 
-          if [ -z "$NEXTVERSION_PATCH" ]
+          if [ -n "$NEXTVERSION_PATCH" ]
           then
             NEXTVERSION=$NEXTVERSION_PATCH
             echo "::set-output name=NEXTVERSION::$NEXTVERSION"
