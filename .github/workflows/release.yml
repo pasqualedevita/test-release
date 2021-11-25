@@ -25,7 +25,7 @@ jobs:
 
       - name: Is major
         id: is_major
-        if: ${{ contains(github.event.pull_request.labels.*.name, 'release_major') }}
+        if: ${{ contains(github.event.pull_request.labels.*.namesß, 'release_major') }}
         run: |
           VERSION=$(git tag  | grep -E '^v[0-9]' | sort -V | tail -1)
           major=0
@@ -43,7 +43,7 @@ jobs:
 
       - name: Is minor
         id: is_minor
-        if: ${{ contains(github.event.pull_request.labels.*.name, 'release_minor') }}
+        if: ${{ contains(github.event.pull_request.labels.*.names, 'release_minor') }}
         run: |
           VERSION=$(git tag  | grep -E '^v[0-9]' | sort -V | tail -1)
           major=0
@@ -61,7 +61,7 @@ jobs:
 
       - name: Is patch
         id: is_patch
-        if: ${{ contains(github.event.pull_request.labels.*.name, 'release_patch') }}
+        if: ${{ contains(github.event.pull_request.labels.*.names, 'release_patch') }}
         run: |
           VERSION=$(git tag  | grep -E '^v[0-9]' | sort -V | tail -1)
           major=0
