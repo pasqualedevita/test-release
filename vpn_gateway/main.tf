@@ -12,6 +12,8 @@ resource "random_string" "dns" {
 
 
 
+
+
 resource "azurerm_public_ip" "gw" {
   name                = "${var.name}-gw-pip"
   location            = var.location
